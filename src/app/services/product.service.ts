@@ -13,10 +13,14 @@ export class ProductService {
 
   constructor(private http: HttpClient) { 
     this.myAppUrl = environment.endpoint;
-    this.MyApiUrl = 'api/productos'
+    this.MyApiUrl = 'api/productos/'
   }
 
   getListProducts(): Observable<Product[]> {
     return this.http.get<Product[]>(`${this.myAppUrl}${this.MyApiUrl}`);
+  }
+
+  deleteProduct(id: number): Observable<void>{
+    return this.http.delete<void>(`${this.myAppUrl}${this.MyApiUrl}${id}`)
   }
 }

@@ -8,7 +8,8 @@ import { ProductService } from 'src/app/services/product.service';
   styleUrls: ['./list-products.component.css']
 })
 export class ListProductsComponent implements OnInit{
-  listProducts: Product[] = []
+  listProducts: Product[] = [];
+  loading: boolean = false;
 
   constructor(private _productService: ProductService) {}
 
@@ -17,8 +18,19 @@ export class ListProductsComponent implements OnInit{
   }
 
   getListProducts() {
-    this._productService.getListProducts().subscribe((data) => {
+    this.loading = true;
+
+    this._productService.getListProducts().subscribe((data: Product[]) => {
       this.listProducts = data;
+      this.loading = false;
+    })
+  }
+
+  deleteProduct(id: number) {
+    this.loading = true;
+
+    this._productService.deleteProduct(id).subscribe(() => {
+      this.getListProducts();
     })
   }
 
