@@ -1,32 +1,39 @@
 <app-progress-bar *ngIf="loading"></app-progress-bar>
 <div *ngIf="!loading" class="container">
-    <div class="title">
-        <h4>Listado de Productos</h4>
-        <button type="button" class="btn btn-primary" routerLink="/add">Agregar Producto</button>
-    </div>
+  <div class="title">
+    <h4>Listado de Productos</h4>
+    <button type="button" class="btn btn-primary" routerLink="/add">Agregar Producto</button>
+  </div>
 
-    <table *ngIf="listProducts.length > 0" class="table table-hover">
-        <thead>
-          <tr>
-            <th scope="col">Nombre</th>
-            <th scope="col">Descripción</th>
-            <th scope="col">Precio</th>
-            <th scope="col">Stock</th>
-            <th scope="col"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let item of listProducts" class="table-active">
-            <td> {{ item.name }} </td>
-            <td> {{ item.description }} </td>
-            <td> {{ item.price | currency }} </td>
-            <td> {{ item.stock }} </td>
-            <td>
-                <button routerLink="/edit/{{ item.id }}" type="button" class="btn btn-info btn-sm">Edit</button>
-                <button (click)="deleteProduct(item.id!)" type="button" class="btn btn-secondary btn-sm ms-2">Delete</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <h5 *ngIf="listProducts.length == 0">No hay productos para mostrar</h5>
+  <div class="search-bar float-left">
+    <input class="form-control me-sm-2" type="text" [(ngModel)]="searchTerm" (keyup)="onSearchTermChange($event)"
+      placeholder="Buscar por nombre o descripción">
+  </div>
+
+  <table *ngIf="filteredProducts.length > 0" class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">Nombre</th>
+        <th scope="col">Descripción</th>
+        <th scope="col">Precio</th>
+        <th scope="col">Stock</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of filteredProducts" class="table-active">
+        <td> {{ item.name }} </td>
+        <td> {{ item.description }} </td>
+        <td> {{ item.price | currency }} </td>
+        <td> {{ item.stock }} </td>
+        <td>
+          <button routerLink="/edit/{{ item.id }}" type="button" class="btn btn-info btn-sm">Edit</button>
+          <button (click)="deleteProduct(item.id!)" type="button" class="btn btn-secondary btn-sm ms-2">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 *ngIf="filteredProducts.length === 0 && searchTerm">No se encontraron productos con el término "{{ searchTerm }}"
+  </h5>
+  <h5 *ngIf="filteredProducts.length === 0 && !searchTerm">No hay productos para mostrar</h5>
 </div>

@@ -8,11 +8,13 @@ import { ProductService } from 'src/app/services/product.service';
   templateUrl: './list-products.component.html',
   styleUrls: ['./list-products.component.css']
 })
-export class ListProductsComponent implements OnInit{
+export class ListProductsComponent implements OnInit {
   listProducts: Product[] = [];
+  filteredProducts: Product[] = [];
+  searchTerm: string = '';
   loading: boolean = false;
 
-  constructor(private _productService: ProductService, private toastr: ToastrService) {}
+  constructor(private _productService: ProductService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
     this.getListProducts();
@@ -23,6 +25,7 @@ export class ListProductsComponent implements OnInit{
 
     this._productService.getListProducts().subscribe((data: Product[]) => {
       this.listProducts = data;
+      this.filteredProducts = this.listProducts;
       this.loading = false;
     })
   }
@@ -36,4 +39,14 @@ export class ListProductsComponent implements OnInit{
     })
   }
 
+  onSearchTermChange(event: Event) {
+    const searchTerm = (event.target as HTMLInputElement).value.toLowerCase();
+    this.searchTerm = searchTerm;
+
+    this.filteredProducts = this.listProducts.filter(product => {
+      const nameMatch = product.name.toLowerCase().includes(searchTerm);
+      const descriptionMatch = product.description.toLowerCase().includes(searchTerm);
+      return nameMatch || descriptionMatch;
+    });
+  }
 }
